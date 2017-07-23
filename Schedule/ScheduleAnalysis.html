@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link rel="stylesheet" href="CSS/style.css">
+    <script src="https://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/echarts/3.6.2/echarts.min.js"></script>
+    <script src="JS/ScheduleAnalysis.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 主计划 -->
+        <div  class="mainplan list-wrap" id="mainplan">
+            <div class="list-title">
+                <p>
+                    <strong>主计划</strong>
+                    <span class="subtitle">制表年份</span>
+                    <select id="year-select">
+                        <option value="2017">2017</option>
+                        <option value="2016">2016</option>
+                        <option value="2015">2015</option>
+                        <option value="2014">2014</option>
+                        <option value="2013">2013</option>
+                    </select>
+                </p>
+            </div>
+            <ul class="table-title">
+                <li>主计划号</li>         
+                <li>制表状态</li>
+                <li>工艺状态</li>
+                <li>表状态</li>
+                <li>制表日期</li>
+                <li>审核日期</li>
+            </ul>
+            <ul class="table-content " id="mp-list-content">
+                <li class="no-more">正在加载······</li>
+            </ul>
+        </div>
+        <!-- 生产管理 子计划 -->
+        <div class="pm subplan list-wrap" id="subplan">
+            <div class="list-title">
+                <p>
+                    <strong>生产子计划</strong>
+                    <span class="subtitle">主计划号</span>
+                    <span></span>
+                </p>
+            </div>
+            <ul class="table-title">
+                <li>子计划号</li>
+                <li>产品类型</li>
+                <li>工作车间</li>
+                <li>表状态</li>
+                <li>制表日期</li>
+                <li>审核日期</li>
+            </ul>
+            <ul class="table-content overflowHidden" id="pmsub-list-content">
+                <li class="no-more">暂无更多</li>
+            </ul>
+        </div>
+        <!-- 工艺 子计划 -->
+        <div class="tm subplan list-wrap" id="tm-subplan">
+            <div class="list-title">
+                <p>
+                    <strong>工艺子计划</strong>
+                    <span class="subtitle">主计划号</span>
+                    <span></span>
+                </p>
+            </div>
+            <ul class="table-title">
+                <li>子计划号</li>
+                <li>产品类型</li>
+                <li>工作组</li>
+                <li>表状态</li>
+                <li>制表日期</li>
+                <li>业务员</li>
+            </ul>
+            <ul class="table-content overflowHidden" id="tmsub-list-content">
+                <li class="no-more">暂无更多</li>
+            </ul>
+        </div>
+        <!-- 图标 -->
+        <div id="mp-chart" class="list-wrap">
+            <div class="list-title">
+                <p>
+                    <strong>生产流程图</strong>
+                    <span class="subtitle">主计划号</span>
+                    <span></span>
+                </p>
+            </div>
+            <div id="show-chart"></div>
+        </div>
+    </div>
+</body>
+</html>

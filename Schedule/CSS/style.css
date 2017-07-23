@@ -1,0 +1,138 @@
+﻿/***
+
+    CSS Reset
+
+*/
+html, body, h1, h2, h3, h4, h5, h6, ul, li, p, span, strong{
+    padding: 0; margin : 0;
+    font-family:"Microsoft YaHei";
+}
+li{
+    list-style:none; 
+}
+a{
+    text-decoration: none;
+}
+
+/*
+
+    public style
+
+
+*/
+.clear:after{
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.container{
+    position: absolute;
+    width: 1000px; left: 0; right: 0; margin: 20px auto;
+}
+.container .list-wrap{
+    position:relative; 
+    width: 1000px;  margin-bottom: 40px;
+}
+/* 列表标题部分 */
+.list-wrap .list-title {
+    width:400px; height:47px;
+    line-height: 50px;
+    border-bottom: 3px solid #0383c0;
+}
+.list-wrap .list-title p {
+    padding-left:50px;
+    font-size:24px; line-height:50px; text-align:left;
+}
+.list-wrap .list-title p strong {
+    display:inline-block; font-weight:400; margin-right:30px;
+}
+.list-wrap .list-title p span {
+    display:inline-block;
+    font-size:18px; font-weight:400;
+}
+.list-wrap .list-title p span.subtitle {
+    color:#0383c0;
+}
+.list-wrap .list-title p select{
+    width:60px; height: 30px; 
+    text-align:left; font-size:16px; font-weight:200;
+    border:none;/*很关键：将默认的select选择框样式清除*/
+    appearance:none;
+    -moz-appearance:none;
+    -webkit-appearance:none;
+    /*在选择框的最右侧中间显示小箭头图片*/
+     background: url("http://ourjs.github.io/static/2015/arrow.png") no-repeat scroll right center transparent;
+     cursor: pointer;
+}
+select::-ms-expand { display: none; }
+.list-wrap ul.table-title{
+    width: 1000px; height: 39px;
+    border-bottom: 1px solid #0383c0;
+}
+.list-wrap ul.table-title li{
+    float: left;
+    text-align: center; line-height: 40px; font-weight: 400;
+}
+
+/* 列表内容部分 */
+.list-wrap ul.table-content{
+    width: 1000px; max-height:360px;
+    overflow-y: auto; overflow-x:hidden;
+}/*
+.list-wrap ul.overflowHidden {
+    overflow: hidden;
+}*/
+.list-wrap ul.table-content li{
+    width: 1000px; height: 39px;
+    line-height: 38px; text-align:center; 
+    border-bottom: 1px solid #ccc; cursor: pointer;
+}
+.list-wrap ul.table-content li span{
+    display:inline-block;
+    text-align:center; font-weight: 200;    
+    white-space: nowrap; text-overflow:ellipsis;}
+ul.table-content li:hover{
+    background: #eaeaea; color: #0383c0;
+}
+.list-wrap ul.table-content li.click{
+    background: #0383c0; color:#fff;
+}
+#show-all {
+    background:#fff; color: #000;
+}
+/**
+
+    Main style
+
+*/
+.mainplan ul.table-title li{
+    width: 166px; 
+}
+.mainplan ul.table-content li span{
+    width: 166px;
+}
+
+/**
+
+    subplan style
+
+*/
+.subplan ul.table-title li{
+    width: 166px; 
+}
+.subplan ul.table-content li span{
+    width: 166px;
+}
+
+/*
+        
+    mp-chart
+
+*/
+#mp-chart {
+    width: 100px; height: 450px; 
+}
+#show-chart {
+    width:900px; height:400px; margin-left:50px;
+}

@@ -1,0 +1,49 @@
+﻿
+@font-face {
+  font-family: 'iconfont';  /* project id 360805 */
+  src: url('//at.alicdn.com/t/font_t4ibcujtq1o47vi.eot');
+  src: url('//at.alicdn.com/t/font_t4ibcujtq1o47vi.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_t4ibcujtq1o47vi.woff') format('woff'),
+  url('//at.alicdn.com/t/font_t4ibcujtq1o47vi.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_t4ibcujtq1o47vi.svg#iconfont') format('svg');
+}
+.fontcss {
+    font-family: 'iconfont'; font-style:normal; font-weight:200;
+    -moz-user-select:none; -webkit-user-select:none; -ms-user-select:none; user-select:none; 
+}
+.container {
+    position:absolute;
+    width: 800px; height:600px; left:0; right:0; margin: 50px auto 0;
+}
+.list-wrap {
+    width: 800px; height:125px; margin-bottom:25px;
+    border-radius:10px;
+    
+}
+.list-wrap h3{
+    float:left;
+    width:47px; height:125px; padding-right:10px;
+    line-height: 62px; text-align:center; font-size:30px; font-weight:200;
+    border-right:3px solid #0383c0;
+}
+.list-wrap ul{
+    float:left;
+    width:715px; height:125px; margin-left:25px; 
+}
+.list-wrap ul li{
+    float:left; 
+    width:125px; height:125px; margin:0px 50px; 
+    text-align:center; 
+    cursor:pointer; border-radius:10px;
+    -webkit-transition:background-color 0.2s ease-in-out; -moz-transition: background-color 0.2s ease-in-out; -o-transition:background-color 0.2s ease-in-out; transition: background-color 0.2s ease-in-out; -ms-transition: background-color 0.2s ease-in-out;
+ }
+.list-wrap ul li:hover{
+    color:#000; background:#ccc;
+}
+.list-wrap li i{
+    margin-left:25px; margin-right:25px;
+    line-height:95px;  font-size:75px; color:#0383c0; 
+}
+.list-wrap li span {
+    line-height:30px;
+}
