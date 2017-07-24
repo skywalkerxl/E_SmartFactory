@@ -1,0 +1,645 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>采购管理采购量统计</title>
+    <link href="../../Public/CSS/Statistics.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <!-- 标题部分 -->
+        <h1 class="header">采购管理采购量统计</h1>
+        <!-- 返回按钮 -->
+        <div class="goback" id="goback">返回</div>
+        <!-- 采购员个人统计 -->
+        <div class="buyer wrap clear">
+            <div class="sub-title">
+                <h2>采购员工作量统计</h2>
+            </div>
+            <div class="chart-left" id="by-chart"></div>
+            <div class="table-right" id="by-table">
+                <div class="title clear" id="by-title">
+                    <ul>
+                        <li id="by-week">本周</li>
+                        <li id="by-month">本月</li>
+                        <li id="by-quarter">本季</li>
+                        <li id="by-half">半年</li>
+                        <li id="by-year" class="click">本年</li>
+                    </ul>
+                </div>
+                <div class="table-content" id="by-table-content">
+                    <div class="content-title">
+                        <strong>采购员</strong>
+                        <strong>采购数</strong>
+                        <strong>总金额</strong>
+                    </div>
+                    <ul></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 综合统计 -->
+        <div class="all-statistics wrap clear">
+            <div class="sub-title">
+                <h2>采购总工作量统计</h2>
+            </div>
+            <div class="chart-left" id="all-chart"></div>
+            <div class="table-right" id="all-table">
+                <div class="title clear" id="all-title">
+                    <ul>
+                        <li id="all-week">本周</li>
+                        <li id="all-month">本月</li>
+                        <li id="all-quarter">本季</li>
+                        <li id="all-half">半年</li>
+                        <li id="all-year" class="click">全年</li>
+                    </ul>
+                </div>
+                <div class="table-content" id="all-table-content">
+                    <div class="content-title">
+                        <strong>年份</strong>
+                        <strong>业务数</strong>
+                        <strong>总金额</strong>
+                    </div>
+                    <ul></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 历年 按 每月 金额汇总 -->
+        <div class="year-month wrap clear">
+            <div class="sub-title">
+                <h2>历年各月工作量统计</h2>
+            </div>
+            <div class="chart-left" id="ym-chart"></div>
+            <div class="table-right" id="ym-table">
+                <div class="title clear" id="ym-title">
+                </div>
+                <div class="table-content" id="ym-table-content">
+                    <div class="content-title">
+                        <strong>年-月</strong>
+                        <strong>业务数</strong>
+                        <strong>总金额</strong>
+                    </div>
+                    <ul></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../Public/JS/jquery-1.11.1.min.js"></script>
+    <script src="../../Public/JS/echarts.common.min.js"></script>
+    <script>
+        var byCharts = echarts.init(document.getElementById('by-chart'));
+        var allCharts = echarts.init(document.getElementById('all-chart'));
+        var ymCharts = echarts.init(document.getElementById('ym-chart'));
+        var dataBuyer = {
+            isInit: 'true',
+            buyer: [],
+            quantity: [],
+            sumprices: []
+        }
+        var dataAll = {
+            isInit: 'true',
+            yearlist: [],
+            quantity: [],
+            sumprices: []
+        }
+        var dataYearMonth = [
+            /*    {
+                    name: '2011',
+                    type: 'line',
+                    data: []
+                },
+                {
+                    name: '2012',
+                    type: 'line',
+                    data: []
+                },
+                ...
+            */
+        ];
+        $(document).ready(init);
+
+        function init() {
+            //解决IE8下indexOf无法使用的问题
+            solveIE8Index();
+
+            byCharts.showLoading();
+            allCharts.showLoading();
+            ymCharts.showLoading();
+
+            getData('byYear', '#by-table-content', '#by-chart');
+            getData('allYear', '#all-table-content', '#all-chart');
+            getData('YearMonth', '#ym-table-content', '#ym-chart');
+            //初始化选项索引
+            var byLastIndex = $('#by-title').find('li').eq(-1);
+            var allLastIndex = $('#all-title').find('li').eq(-1);
+
+            //点击返回按钮返回上一级
+            $('#goback').click(function () {
+                window.history.back(-1);
+            });
+
+
+            $('.title').find('li').click(function () {
+                //置空dataBuyer对象
+                dataBuyer = {
+                    isInit: 'true',
+                    buyer: [],
+                    quantity: [],
+                    sumprices: []
+                }
+                dataAll = {
+                    isInit: 'true',
+                    yearlist: [],
+                    quantity: [],
+                    sumprices: []
+                }
+                switch ($(this).attr('id')) {
+                    //各部门统计部分
+                    case 'by-year':
+                        getData('byYear', '#by-table-content', '#by-chart');
+                        break;
+                    case 'by-half':
+                        getData('byHalf', '#by-table-content', '#by-chart');
+                        break;
+                    case 'by-quarter':
+                        getData('byQuarter', '#by-table-content', '#by-chart');
+                        break;
+                    case 'by-month':
+                        getData('byMonth', '#by-table-content', '#by-chart');
+                        break;
+                    case 'by-week':
+                        getData('byWeek', '#by-table-content', '#by-chart');
+                        break;
+
+                    case 'all-year':
+                        getData('allYear', '#all-table-content', '#all-chart');
+                        break;
+                    case 'all-half':
+                        getData('allHalf', '#all-table-content', '#all-chart');
+                        break;
+                    case 'all-quarter':
+                        getData('allQuarter', '#all-table-content', '#all-chart');
+                        break;
+                    case 'all-month':
+                        getData('allMonth', '#all-table-content', '#all-chart');
+                        break;
+                    case 'all-week':
+                        getData('allWeek', '#all-table-content', '#all-chart');
+                        break;
+                }
+            });
+            //选项卡切换
+            $('#by-title').find('li').click(function () {
+                $(byLastIndex).removeClass('click');
+                $(this).addClass('click');
+                byLastIndex = this;
+            });
+            $('#all-title').find('li').click(function () {
+                $(allLastIndex).removeClass('click');
+                $(this).addClass('click');
+                allLastIndex = this;
+            });
+
+            function getData(option, listId, chartId) {
+                $.ajax({
+                    url: '/Handler/ERP/StocksManager/StatisticsHandler.ashx',
+                    data: { option: option },
+                    success: function (data) {
+                        data = $.parseJSON(data);
+                        setlistData(data, listId);
+                        setChartData(data, chartId);
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    }
+                })
+            }
+
+            function setlistData(data, listId) {
+                $(listId).find('ul').html(''); //置空数据冗余
+                var arrList = []; //类似于文档碎片的作用
+                switch (listId) {
+                    case '#by-table-content':
+                        for (var i = 0; i < data.total; i++) {
+                            var li = '<li><span>' + data.data[i].buyer + '</span><span class="right">' + (data.data[i].quantity.toFixed(2)) + '</span><span class="right">' + data.data[i].sumprices.toFixed(2) + '</span></li>'
+                            arrList[i] = li;
+                        }
+                        break;
+                    case '#all-table-content':
+                        for (var i = 0; i < data.total; i++) {
+                            var li = '<li><span>' + data.data[i].yearlist + '</span><span class="right">' + (data.data[i].quantity.toFixed(2)) + '</span><span class="right">' + data.data[i].sumprices.toFixed(2) + '</span></li>'
+                            arrList[i] = li;
+                        }
+                        break;
+                    case '#ym-table-content':
+                        for (var i = 0; i < data.total; i++) {
+                            var li = '<li><span>' + data.data[i].yearmonth + '</span><span class=right>' + (data.data[i].quantity).toFixed(2) + '</span><span class=right>' + data.data[2].sumprices + '</span></li>'
+                            arrList[i] = li;
+                        }
+                        break;
+                }
+
+                $(listId).find('ul').html(arrList.join('')); //填充表格数据
+            }
+
+            function setChartData(data, chartId) {
+                switch (chartId) {
+                    case '#by-chart':
+                        for (var i = 0 ; i < data.total; i++) {
+                            dataBuyer.buyer.push(data.data[i].buyer);
+                            dataBuyer.quantity.push(data.data[i].quantity);
+                            dataBuyer.sumprices.push(data.data[i].sumprices);
+                        }
+                        byCharts.hideLoading();
+                        byCharts.setOption(loadBuyerChart(dataBuyer));
+                        break;
+                    case '#all-chart':
+                        for (var i = 0 ; i < data.total; i++) {
+                            dataAll.yearlist.push(data.data[i].yearlist);
+                            dataAll.quantity.push(data.data[i].quantity);
+                            dataAll.sumprices.push(data.data[i].sumprices);
+                        }
+                        allCharts.hideLoading();
+                        allCharts.setOption(loadAllChart(dataAll));
+                        break;
+                    case '#ym-chart':
+                        var initData = data.data;//这里我们初始化一个initData用来记录视图拿到的数据，后面会与addData进行拼接
+                        var subDataYear = []; //首先拿到年
+                        var subDataYearUnique = []; //这是用来存储去重后的年
+                        var subDataMonth = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']; //这是所有月份的集合，用来与之后的月份做减法操作
+                        var subSumYearObj = {}; //每个年份对应的数量 对象类型
+                        var subSumYearArr = []; //每个年份对应的数量 数组类型
+                        var addData = []; //需要填充进去的数据
+                        var indexArr = []; //存储月份不够的年数 具体索引
+                        for (var i = 0; i < data.total; i++) {
+                            subDataYear.push(data.data[i].yearlist);
+                        }
+                        subDataYearUnique = unique(subDataYear); //拿到去重后的年份
+                        var subSumYear = countNum(subDataYear); //拿到各年份的数目
+                        //拿到数目
+                        for (var key in subSumYear) {
+                            subSumYearArr.push(subSumYear[key]);
+                        }
+                        for (var i = 0; i < data.total ; i++) {
+                            var index = subDataYearUnique.indexOf(data.data[i].yearlist);
+                            //获取非最后一年的其他所有年数的数据
+                            if ((index != -1) && (index != subDataYearUnique.length)) {
+                                //操作包括最新一年的所有年份
+                                if (subSumYearArr[index] < 12) {
+                                    indexArr.push(index); //拿到年数月份缺少不够的 具体年份
+                                }
+                            }
+                        }
+                        indexArr = unique(indexArr); //去重后，获取具体的年份索引
+                        var MonthArr = new Array(); //这里用来存储具体的月份  二维数组
+                        var subMonthArr = [];
+                        for (var j = 0 ; j < indexArr.length ; j++) {
+                            //这里开始对月份进行统计
+                            subMonthArr.splice(0, subMonthArr.length);
+                            for (var i = 0; i < data.total ; i++) {
+                                if (data.data[i].yearlist == subDataYearUnique[indexArr[j]]) {
+                                    subMonthArr.push(data.data[i].monthlist);
+                                }
+                            }
+                            //这里存储二维数组
+                            //一维长度为i,i为变量，可以根据实际情况改变
+
+                            MonthArr[j] = new Array();  //声明二维，每一个一维数组里面的一个元素都是一个数组；
+                            for (var m = 0; m < subMonthArr.length; m++) {
+                                MonthArr[j][m] = subMonthArr[m];
+                            }
+                        }
+                        //由上，我们可以得知月份不足的年份具体所含有的月份，并保存在二维数组 MonthArr中
+                        //现在我们开始便利这个二维数组，然后拿到缺少的月份,当然前提是我们都知道一年中含有12个月份
+                        //在这里我们再定义一个二维数组lackMonthArr来存储缺少的月份
+                        var lackMonthArr = new Array();
+                        for (var m = 0 ; m < indexArr.length ; m++) {
+                            subDataMonth = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+                            //取数组的差 subDataMonth  - MonthArr[i] 并存储在subDataMonth中
+                            for (var i = subDataMonth.length - 1; i >= 0; i--) {
+                                a = subDataMonth[i];
+                                for (var j = MonthArr[m].length - 1; j >= 0; j--) {
+                                    b = MonthArr[m][j];
+                                    if (a == b) {
+                                        subDataMonth.splice(i, 1);
+                                        MonthArr[m].splice(j, 1);
+                                        break;
+                                    }
+                                }
+                            }
+                            lackMonthArr[m] = new Array();
+                            for (var i = 0 ; i < subDataMonth.length ; i++) {
+                                lackMonthArr[m][i] = subDataMonth[i];
+                            }
+                        }
+                        //由上，我们拿到了所缺少的月份，并存储在二维数组 lackMonthArr 中
+                        //至此，我们获得了 所缺少的年份数组  subDataYearUnique  以及 对应所缺少的月份  lackMonthArr
+                        //现在，我们给对应的年份及月份增加对应的信息
+                        var addData = new Array();
+                        var indexArrlen = indexArr.length;
+                        for (var i = 0 ; i < indexArrlen ; i++) {
+                            for (var j = 0 ; j < lackMonthArr[i].length; j++) {
+                                //这里需要用到的字段其实只有 '年','月','业务金额'
+                                addData.push(
+                                {
+                                    quantity: 0,
+                                    sumprices: 0,
+                                    yearlist: subDataYearUnique[indexArr[i]],
+                                    monthlist: lackMonthArr[i][j],
+                                    yearmonth: subDataYearUnique[indexArr[i]] + '-' + lackMonthArr[i][j]
+                                })
+                            }
+                        }
+                        console.log(addData);
+                        var lastDataArr = addData.concat(initData);
+                        console.log(lastDataArr);
+                        //获得所有所需的数据之后，我们可以构建新的数组对象seriesData，用来填充series
+                        var seriesData = [];
+                        //首先我们需要弄清楚seriesData的数组长度，显然这是和subDataYearUnique的长度是一样的
+
+                        for (var i = 0 ; i < subDataYearUnique.length ; i++) {
+                            //遍历数组，按年份分类, seriesData同样是二维数组
+                            seriesData[i] = new Array();
+                            var index = 0;
+                            for (var j = 0 ; j < lastDataArr.length ; j++) {
+                                if (lastDataArr[j].yearlist == subDataYearUnique[i]) {
+                                    //subDataYearUnique中的年份是排序好的，按年分类不能完全保证月份的顺序
+                                    seriesData[i][index] = lastDataArr[j];
+                                    index++;
+                                }
+                            }
+                        }
+                        //按年分类后开始按月份排序
+                        for (var i = 0 ; i < subDataYearUnique.length ; i++) {
+                            seriesData[i].sort(by('monthlist'));
+                        }
+                        //只需要里面的业务金额，我们还需要一个二维数组 priceArr
+                        var priceArr = [];
+                        for (var i = 0 ; i < subDataYearUnique.length ; i++) {
+                            priceArr[i] = new Array();
+                            for (var j = 0 ; j < seriesData[i].length ; j++) {
+                                priceArr[i][j] = seriesData[i][j].sumprices;
+                            }
+                        }
+                        console.log(seriesData);
+                        console.log(priceArr);
+                        //定义seriesData
+                        var seriesDataToChart = [];
+                        for (var i = 0 ; i < subDataYearUnique.length ; i++) {
+                            //这里的要存储的data即为对应的业务金额
+
+                            seriesDataToChart.push({
+                                name: subDataYearUnique[i],
+                                type: 'line',
+                                data: priceArr[i],
+
+                            })
+                        }
+                        //定义哪些默认已选中
+                        var selectDataArr = {};
+                        for (var i = 0 ; i < subDataYearUnique.length - 3; i++) {
+                            var key = subDataYearUnique[i];
+                            var value = false;
+                            selectDataArr[key] = value;
+                        }
+                        for (var i = subDataYearUnique.length - 3 ; i < subDataYearUnique.length; i++) {
+                            var key = subDataYearUnique[i];
+                            var value = true;
+                            selectDataArr[key] = value;
+                        }
+                        ymCharts.hideLoading();
+                        ymCharts.setOption(loadAllYearEcahrt(seriesDataToChart, subDataYearUnique, selectDataArr));
+
+                }
+            }
+
+            //加载采购员【采购数】、【总价】图表
+            function loadBuyerChart(data) {
+                optionBuyer = {
+                    /*title: {
+                        text: '采购员采购数和总金额',
+                    },*/
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: ['采购数', '总金额']
+                    },
+                    grid: {
+                        left: '5%',
+                        right: '10%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            saveAsImage: { show: true }
+                        }
+                    },
+                    calculable: true,
+                    xAxis: [
+                        {
+                            type: 'category',
+                            data: data.buyer
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value'
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '采购数',
+                            type: 'bar',
+                            data: data.quantity,
+                            markLine: {
+                                data: [
+                                    { type: 'average', name: '平均值' }
+                                ]
+                            }
+                        },
+                        {
+                            name: '总金额',
+                            type: 'bar',
+                            data: data.sumprices,
+                            markLine: {
+                                data: [
+                                    { type: 'average', name: '平均值' }
+                                ]
+                            }
+                        }
+                    ]
+                };
+                return optionBuyer;
+            }
+
+            //所有部门总工作量 图表 加载项
+            function loadAllChart(data) {
+                optionAll = {
+                    /*title: {
+                        text: '各年份业务数及总金额'
+                    },*/
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: ['业务数', '总金额']
+                    },
+                    grid: {
+                        left: '5%',
+                        right: '10%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: data.yearlist
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name: '业务数',
+                            type: 'line',
+                            data: data.quantity,
+                            markLine: {
+                                data: [
+                                    { type: 'average', name: '平均值' }
+                                ]
+                            }
+                        },
+                        {
+                            name: '总金额',
+                            type: 'line',
+                            data: data.sumprices,
+                            markLine: {
+                                data: [
+                                    { type: 'average', name: '平均值' }
+                                ]
+                            }
+                        },
+
+                    ]
+                };
+                return optionAll;
+            }
+
+            //加载 全年数据
+            function loadAllYearEcahrt(data, datalegend, selected) {
+                optionAllYear = {
+                   /* title: {
+                        text: '历年业务金额',
+                        top: '60',
+                    },*/
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '15%',
+                        top: '100',
+                        containLabel: true
+                    },
+                    legend: {
+                        data: datalegend,
+                        selected: selected
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', ]
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: data
+                };
+                return optionAllYear;
+            }
+
+            //数组去重
+            function unique(ary) {
+                var o = {}, i, l = ary.length, r = [];
+                for (i = 0; i < l; i++) o[ary[i]] = ary[i];
+                for (i in o) r.push(o[i]);
+                return r;
+            };
+            //数组中各元素的数目
+            function countNum(arr) {
+                var newArr = [],
+                    len = arr.length,
+                    obj = {};
+
+                for (var count = 0 ; count < len ; count++) {
+                    if (obj[arr[count].toString()]) {
+                        obj[arr[count].toString()]++;
+                    } else {
+                        obj[arr[count].toString()] = 1;
+                    }
+
+                }
+                return obj;
+
+            }
+            //对象数组排序
+            function by(name) {
+                return function (o, p) {
+                    var a, b;
+                    if (typeof o === "object" && typeof p === "object" && o && p) {
+                        a = o[name];
+                        b = p[name];
+                        if (a === b) {
+                            return 0;
+                        }
+                        if (typeof a === typeof b) {
+                            return a < b ? -1 : 1;
+                        }
+                        return typeof a < typeof b ? -1 : 1;
+                    }
+                    else {
+                        throw ("error");
+                    }
+                }
+            }
+            //解决IE8下不支持IndexOf问题
+            function solveIE8Index() {
+                if (!Array.prototype.indexOf) {
+                    Array.prototype.indexOf = function (elt /*, from*/) {
+                        var len = this.length >>> 0;
+
+                        var from = Number(arguments[1]) || 0;
+                        from = (from < 0)
+                             ? Math.ceil(from)
+                             : Math.floor(from);
+                        if (from < 0)
+                            from += len;
+
+                        for (; from < len; from++) {
+                            if (from in this &&
+                                this[from] === elt)
+                                return from;
+                        }
+                        return -1;
+                    };
+                }
+            }
+        }
+    </script>
+</body>
+</html>

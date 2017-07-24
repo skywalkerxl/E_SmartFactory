@@ -1,0 +1,120 @@
+﻿/* =============================================================================
+   CSS Reset 
+   ========================================================================== */
+html, body, h1, h2, h3, h4, h5, h6, ul, li { 
+    margin:0; padding:0; font-family:"Microsoft YaHei" ;}
+li { list-style:none; }
+a{
+    text-decoration:none;
+}
+
+/* =============================================================================
+   Public CSS 
+   ========================================================================== */
+
+.clear:after{
+    display:block;
+    content: "";
+    clear :both;
+}
+html, body {
+    width: 100%; height:100%;
+}
+li:hover {
+    background: #eaeaea; color: #0383c0;
+}
+.container {
+    position: absolute;
+    width: 1000px; height: 1450px;  left: 0; right: 0; margin:50px auto;
+}
+.wrap {
+    width :1000px; height: 450px; margin-bottom: 50px;
+}
+
+/* 顶部标题部分 */
+.header {
+    width:1000px; height:100px;
+    text-align:center; line-height:100px; font-size:34px; font-weight:400;
+}
+
+/* 各项子标题部分 */
+.wrap .sub-title{
+    width:1000px; height:50px;
+}
+
+.wrap h2{
+    width: 270px; height: 47px; padding-left:30px;
+    line-height: 50px; font-size: 22px; font-weight: normal;
+    border-bottom: 3px solid #0383c0; text-align:left;
+}
+
+
+/* 返回按钮 */
+.goback{
+    position:absolute;
+    width:90px; height: 40px; right:0; top:30px;
+    color:#fff; text-align:center; line-height:40px; font-size:16px; 
+    background:#CC0033; border-radius:5px; cursor:pointer;
+}
+
+/* 左边图部分 start */
+.chart-left {
+    float:left;
+    width: 600px; height: 380px; padding-top: 20px; 
+}
+/* 右边表部分 start && 左边图部分 end */
+.table-right {
+    width: 400px; height: 400px; float:left;
+}
+
+/* 右边表【标题】部分  */
+.table-right .title{
+    padding-left:70px;
+}
+
+.table-right .title ul {
+    width: 330px; height: 40px; padding-top: 10px; 
+}
+.table-right .title ul li {
+    float:left;
+    width: 66px; height: 30px;   
+    line-height: 30px; font-size: 16px; font-weight: 200; text-align:center;
+    cursor: pointer; border-radius:5px;
+}
+.table-right .title ul li.click{
+    background: #0383c0; color: #fff;
+}
+/* 右边表【内容】部分 */
+.table-right .table-content {
+    width: 400px; height: 360px;
+}
+.table-right .table-content .content-title {
+    width: 400px; height: 39px;
+    line-height: 39px; 
+    border-bottom: 1px solid #ccc;
+}
+.table-right .table-content .content-title strong {
+    display: inline-block; 
+    width:130px; height: 39px; 
+    text-align:center; line-height: 40px; font-size: 16px; font-weight: normal;
+}
+.table-right .table-content ul {
+    width: 400px; height: 280px; 
+    overflow-y: auto; overflow-x:hidden;
+}
+.table-right .table-content ul li {   
+    width: 400px; height: 39px;
+    border-bottom: 1px solid #ccc; 
+}
+.table-right .table-content ul li span {
+    display: inline-block;
+    width:130px; height:40px;
+    line-height: 40px; font-size:16px; text-align:center;text-overflow: ellipsis; white-space: nowrap;
+}
+span.right{
+    width: 120px;
+    text-align: right;
+}
+.allstatiscs .sub-title h2{
+    width:370px;
+}

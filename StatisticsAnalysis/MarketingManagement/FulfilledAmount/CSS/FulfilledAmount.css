@@ -1,0 +1,34 @@
+﻿/* =============================================================================
+   MainPlan CSS 
+   ========================================================================== */
+
+/**
+ *
+ *   该部分为"营销主计划 部门统计 "样式， 
+ *   主计划样式
+ *
+ **/ 
+.dep-statistics {}
+
+
+ /**
+ *
+ *   该部分为"营销主计划 历年统计 "样式， 
+ *   主计划样式
+ *
+ **/  
+/* 左边图部分 start */
+ .allstatiscs .chart-left {
+    width: 600px; height: 580px; padding-top: 20px; 
+}
+/* 右边表部分 start && 左边图部分 end */
+.allstatiscs .table-right {
+    width: 400px; height: 600px; float:left;
+}
+.allstatiscs .table-right .table-content ul {
+    height: 480px; 
+}
+.allstatiscs .table-right .title h3{
+    width: 250px; 
+}
+
