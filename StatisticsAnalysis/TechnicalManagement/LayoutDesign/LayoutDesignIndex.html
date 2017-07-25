@@ -2,34 +2,35 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>营销管理完成额统计</title>
+    <title>工艺管理图纸设计统计</title>
     <link href="../../Public/CSS/Statistics.css" rel="stylesheet" />
 </head>
+
 <body>
     <div class="container">
         <!-- 标题部分 -->
-        <h1 class="header">营销管理完成额统计</h1>
+        <h1 class="header">工艺管理图纸设计统计</h1>
         <!-- 返回按钮 -->
         <div class="goback" id="goback">返回</div>
-        <!-- 生产部门 统计 -->
-        <div class="linker wrap clear">
+        <!-- 设计者 统计 -->
+        <div class="designer wrap clear">
             <div class="sub-title">
-                <h2>业务员工作量统计</h2>
+                <h2>设计者工作量统计</h2>
             </div>
-            <div class="chart-left" id="ws-chart"></div>
-            <div class="table-right" id="ws-table">
-                <div class="title clear" id="ws-title">
+            <div class="chart-left" id="de-chart"></div>
+            <div class="table-right" id="de-table">
+                <div class="title clear" id="de-title">
                     <ul>
-                        <li id="ws-week">本周</li>
-                        <li id="ws-month">本月</li>
-                        <li id="ws-quarter">本季</li>
-                        <li id="ws-half">半年</li>
-                        <li id="ws-year" class="click">本年</li>
+                        <li id="de-week">本周</li>
+                        <li id="de-month">本月</li>
+                        <li id="de-quarter">本季</li>
+                        <li id="de-half">半年</li>
+                        <li id="de-year" class="click">本年</li>
                     </ul>
                 </div>
-                <div class="table-content" id="ws-table-content">
+                <div class="table-content" id="de-table-content">
                     <div class="content-title">
-                        <strong>业务员</strong>
+                        <strong>设计者</strong>
                         <strong>业务数</strong>
                         <strong>总金额</strong>
                     </div>
@@ -38,22 +39,22 @@
             </div>
         </div>
         <!-- 总业务数 总金额统计 -->
-        <div class="all-linker wrap clear">
+        <div class="all-designer wrap clear">
             <div class="sub-title">
-                <h2>总业务工作量统计</h2>
+                <h2>设计总工作量统计</h2>
             </div>
-            <div class="chart-left" id="aw-chart"></div>
-            <div class="table-right" id="aw-table">
-                <div class="title clear" id="aw-title">
+            <div class="chart-left" id="ad-chart"></div>
+            <div class="table-right" id="ad-table">
+                <div class="title clear" id="ad-title">
                     <ul>
-                        <li id="aw-week">本周</li>
-                        <li id="aw-month">本月</li>
-                        <li id="aw-quarter">本季</li>
-                        <li id="aw-half">半年</li>
-                        <li id="aw-year" class="click">本年</li>
+                        <li id="ad-week">本周</li>
+                        <li id="ad-month">本月</li>
+                        <li id="ad-quarter">本季</li>
+                        <li id="ad-half">半年</li>
+                        <li id="ad-year" class="click">本年</li>
                     </ul>
                 </div>
-                <div class="table-content" id="aw-table-content">
+                <div class="table-content" id="ad-table-content">
                     <div class="content-title">
                         <strong>年份</strong>
                         <strong>业务数</strong>
@@ -86,20 +87,20 @@
     <script src="../../Public/JS/echarts.common.min.js"></script>
     <script>
         $(function () {
-            var wsCharts = echarts.init(document.getElementById('ws-chart'));
-            var awCharts = echarts.init(document.getElementById('aw-chart'));
+            var deCharts = echarts.init(document.getElementById('de-chart'));
+            var adCharts = echarts.init(document.getElementById('ad-chart'));
             var ymCharts = echarts.init(document.getElementById('ym-chart'));
-            var dataWs = {
+            var dataDe = {
                 isInit: 'true',
-                linker: [],
-                sumquantites: [],
-                sumprices: []
+                designer: [],
+                sumquantities: [],
+                sumweights: []
             }
-            var dataAw = {
+            var dataAd = {
                 isInit: 'true',
                 year: [],
-                sumquantites: [],
-                sumprices: []
+                sumquantities: [],
+                sumweights: []
             }
             var dataYearMonth = [
             /*    {
@@ -122,17 +123,17 @@
                 //解决IE8下indexOf无法使用的问题
                 solveIE8Index();
 
-                wsCharts.showLoading();
-                awCharts.showLoading();
+                deCharts.showLoading();
+                adCharts.showLoading();
                 ymCharts.showLoading();
 
-                getData('SYear', '#ws-table-content', '#ws-chart');
-                getData('AYear', '#aw-table-content', '#aw-chart');
-                getData('YM', '#ym-table-content', '#ym-chart');
+                getData('dYear', '#de-table-content', '#de-chart');
+                getData('aYear', '#ad-table-content', '#ad-chart');
+                getData('ym', '#ym-table-content', '#ym-chart');
 
                 //初始化选项索引
-                var WsLastIndex = $('#ws-title').find('li').eq(-1);
-                var AWLastIndex = $('#aw-title').find('li').eq(-1);
+                var deLastIndex = $('#de-title').find('li').eq(-1);
+                var adLastIndex = $('#ad-title').find('li').eq(-1);
 
                 //点击返回按钮返回上一级
                 $('#goback').click(function () {
@@ -140,71 +141,71 @@
                 });
 
                 $('.title').find('li').click(function () {
-                    //置空dataWs对象
-                    dataWs = {
+                    //置空dataDe对象
+                    dataDe = {
                         isInit: 'true',
-                        linker: [],
-                        sumquantites: [],
-                        sumprices: []
+                        designer: [],
+                        sumquantities: [],
+                        sumweights: []
                     }
-                    //置空dataAw对象
-                    dataAw = {
+                    //置空dataAd对象
+                    dataAd = {
                         isInit: 'true',
                         year: [],
-                        sumquantites: [],
-                        sumprices: []
+                        sumquantities: [],
+                        sumweights: []
                     }
                     switch ($(this).attr('id')) {
                         //各部门统计部分
-                        case 'ws-week':
-                            getData('SWeek', '#ws-table-content', '#ws-chart');
+                        case 'de-week':
+                            getData('dWeek', '#de-table-content', '#de-chart');
                             break;
-                        case 'ws-month':
-                            getData('SMonth', '#ws-table-content', '#ws-chart');
+                        case 'de-month':
+                            getData('dMonth', '#de-table-content', '#de-chart');
                             break;
-                        case 'ws-quarter':
-                            getData('SQuarter', '#ws-table-content', '#ws-chart');
+                        case 'de-quarter':
+                            getData('dQuarter', '#de-table-content', '#de-chart');
                             break;
-                        case 'ws-half':
-                            getData('SHalf', '#ws-table-content', '#ws-chart');
+                        case 'de-half':
+                            getData('dHalf', '#de-table-content', '#de-chart');
                             break;
-                        case 'ws-year':
-                            getData('SYear', '#ws-table-content', '#ws-chart');
+                        case 'de-year':
+                            getData('dYear', '#de-table-content', '#de-chart');
                             break;
                             //部门总统计部分
-                        case 'aw-week':
-                            getData('AWeek', '#aw-table-content', '#aw-chart');
+                        case 'ad-week':
+                            getData('aWeek', '#ad-table-content', '#ad-chart');
                             break;
-                        case 'aw-month':
-                            getData('AMonth', '#aw-table-content', '#aw-chart');
+                        case 'ad-month':
+                            getData('aMonth', '#ad-table-content', '#ad-chart');
                             break;
-                        case 'aw-quarter':
-                            getData('AQuarter', '#aw-table-content', '#aw-chart');
+                        case 'ad-quarter':
+                            getData('aQuarter', '#ad-table-content', '#ad-chart');
                             break;
-                        case 'aw-half':
-                            getData('AHalf', '#aw-table-content', '#aw-chart');
+                        case 'ad-half':
+                            getData('aHalf', '#ad-table-content', '#ad-chart');
                             break;
-                        case 'aw-year':
-                            getData('AYear', '#aw-table-content', '#aw-chart');
+                        case 'ad-year':
+                            getData('aYear', '#ad-table-content', '#ad-chart');
                             break;
                     }
                 });
                 //选项卡切换
-                $('#ws-title').find('li').click(function () {
-                    $(WsLastIndex).removeClass('click');
+                $('#de-title').find('li').click(function () {
+                    $(deLastIndex).removeClass('click');
                     $(this).addClass('click');
-                    WsLastIndex = this;
+                    deLastIndex = this;
                 });
-                $('#aw-title').find('li').click(function () {
-                    $(AWLastIndex).removeClass('click');
+                $('#ad-title').find('li').click(function () {
+                    $(adLastIndex).removeClass('click');
                     $(this).addClass('click');
-                    AWLastIndex = this;
+                    adLastIndex = this;
                 })
             }
             //获取数据
             function getData(option, listId, chartId) {
                 $.ajax({
-                    url: '/Handler/ERP/SmartFactory/StatisticsAnalysis/MMContractAmountHandler.ashx',
+                    url: '/Handler/ERP/TechnicalMangement/StatisticsHandler.ashx',
                     data: { option: option },
                     success: function (data) {
                         data = $.parseJSON(data);
@@ -221,22 +222,22 @@
                 $(listId).find('ul').html(''); //置空数据冗余
                 var arrList = []; //类似于文档碎片的作用
                 switch (listId) {
-                    case '#ws-table-content':
+                    case '#de-table-content':
                         for (var i = 0; i < data.total; i++) {
-                            var li = '<li><span>' + data.data[i].linker + '</span><span>' + (data.data[i].sumquantities) + '</span><span>' + data.data[i].sumprices + '</span></li>'
+                            var li = '<li><span>' + data.data[i].designer + '</span><span class="right">' + (data.data[i].sumquantities) + '</span><span class="right">' + data.data[i].sumweights.toFixed(2) + '</span></li>'
                             arrList[i] = li;
                         }
                         break;
-                    case '#aw-table-content':
+                    case '#ad-table-content':
                         for (var i = 0; i < data.total; i++) {
-                            var li = '<li><span>' + data.data[i].year + '</span><span>' + (data.data[i].sumquantities) + '</span><span>' + data.data[i].sumprices + '</span></li>'
-                            arrList[data.total - i] = li;
+                            var li = '<li><span>' + data.data[i].year + '</span><span class="right">' + (data.data[i].sumquantities) + '</span><span class="right">' + data.data[i].sumweights.toFixed(2) + '</span></li>'
+                            arrList[i] = li;
                         }
                         break;
                     case '#ym-table-content':
                         for (var i = 0; i < data.total; i++) {
-                            var li = '<li><span>' + data.data[i].yearmonth + '</span><span>' + (data.data[i].sumquantities) + '</span><span>' + data.data[i].sumprices + '</span></li>'
-                            arrList[data.total - i] = li;
+                            var li = '<li><span>' + data.data[i].yearmonth + '</span><span class="right">' + (data.data[i].sumquantities) + '</span><span class="right">' + data.data[i].sumweights.toFixed(2) + '</span></li>'
+                            arrList[i] = li;
                         }
                         break;
                 }
@@ -246,23 +247,23 @@
             //加载图表信息
             function setChartData(data, chartId) {
                 switch (chartId) {
-                    case '#ws-chart':
+                    case '#de-chart':
                         for (var i = 0 ; i < data.total; i++) {
-                            dataWs.linker.push(data.data[i].linker);
-                            dataWs.sumquantites.push(data.data[i].sumquantites);
-                            dataWs.sumprices.push(data.data[i].sumprices);
+                            dataDe.designer.push(data.data[i].designer);
+                            dataDe.sumquantities.push(data.data[i].sumquantities);
+                            dataDe.sumweights.push(data.data[i].sumweights);
                         }
-                        wsCharts.hideLoading();
-                        wsCharts.setOption(wsOption(dataWs));
+                        deCharts.hideLoading();
+                        deCharts.setOption(deOption(dataDe));
                         break;
-                    case '#aw-chart':
+                    case '#ad-chart':
                         for (var i = 0 ; i < data.total; i++) {
-                            dataAw.year.push(data.data[i].year);
-                            dataAw.sumquantites.push(data.data[i].sumquantites);
-                            dataAw.sumprices.push(data.data[i].sumprices);
+                            dataAd.year.push(data.data[i].year);
+                            dataAd.sumquantities.push(data.data[i].sumquantities);
+                            dataAd.sumweights.push(data.data[i].sumweights);
                         }
-                        awCharts.hideLoading();
-                        awCharts.setOption(awOption(dataAw));
+                        adCharts.hideLoading();
+                        adCharts.setOption(adOption(dataAd));
                         break;
                     case '#ym-chart':
                         var initData = data.data;//这里我们初始化一个initData用来记录视图拿到的数据，后面会与addData进行拼接
@@ -334,6 +335,8 @@
                                 lackMonthArr[m][i] = subDataMonth[i];
                             }
                         }
+                        console.log('lackMonthArr');
+                        console.log(lackMonthArr);
                         //由上，我们拿到了所缺少的月份，并存储在二维数组 lackMonthArr 中
                         //至此，我们获得了 所缺少的年份数组  subDataYearUnique  以及 对应所缺少的月份  lackMonthArr
                         //现在，我们给对应的年份及月份增加对应的信息
@@ -344,8 +347,8 @@
                                 //这里需要用到的字段其实只有 '年','月','业务金额'
                                 addData.push(
                                 {
-                                    sumquantites: 0,
-                                    sumprices: 0,
+                                    sumquantities: 0,
+                                    sumweights: 0,
                                     year: subDataYearUnique[indexArr[i]],
                                     month: lackMonthArr[i][j],
                                     yearmonth: subDataYearUnique[indexArr[i]] + '-' + lackMonthArr[i][j]
@@ -380,7 +383,7 @@
                         for (var i = 0 ; i < subDataYearUnique.length ; i++) {
                             priceArr[i] = new Array();
                             for (var j = 0 ; j < seriesData[i].length ; j++) {
-                                priceArr[i][j] = seriesData[i][j].sumprices;
+                                priceArr[i][j] = seriesData[i][j].sumweights;
                             }
                         }
                         console.log(seriesData);
@@ -416,8 +419,8 @@
             }
 
             //加载生产部门【业务数】、【总价】图表
-            function loadWsEchart(data) {
-                optionWs = {
+            function loaddeEchart(data) {
+                optionde = {
                     /*title: {
                         text: '工作车间业务数和总价',
                     },*/
@@ -443,7 +446,7 @@
                     xAxis: [
                         {
                             type: 'category',
-                            data: data.datalinker
+                            data: data.dataDesigner
                         }
                     ],
                     yAxis: [
@@ -455,7 +458,7 @@
                         {
                             name: '业务数',
                             type: 'bar',
-                            data: data.dataWsNum,
+                            data: data.dataDeNum,
                             markLine: {
                                 data: [
                                     { type: 'average', name: '平均值' }
@@ -465,7 +468,7 @@
                         {
                             name: '总价',
                             type: 'bar',
-                            data: data.dataWsMoney,
+                            data: data.dataDeMoney,
                             markLine: {
                                 data: [
                                     { type: 'average', name: '平均值' }
@@ -474,15 +477,15 @@
                         }
                     ]
                 };
-                return optionWs;
+                return optionde;
             }
             //加载所有部门总【业务数】、【总价】图表
-            function laodAwEchart(data) { }
+            function laodadEchart(data) { }
 
 
             //各工作部门工作量 图表 加载项
-            function wsOption(data) {
-                optionlinker = {
+            function deOption(data) {
+                optiondesigner = {
                     /*title: {
                         text: '部门业务数和总金额',
                     },*/
@@ -508,7 +511,7 @@
                     xAxis: [
                         {
                             type: 'category',
-                            data: data.linker
+                            data: data.designer
                         }
                     ],
                     yAxis: [
@@ -520,7 +523,7 @@
                         {
                             name: '业务数',
                             type: 'bar',
-                            data: data.sumquantites,
+                            data: data.sumquantities,
                             markLine: {
                                 data: [
                                     { type: 'average', name: '平均值' }
@@ -530,7 +533,7 @@
                         {
                             name: '总金额',
                             type: 'bar',
-                            data: data.sumprices,
+                            data: data.sumweights,
                             markLine: {
                                 data: [
                                     { type: 'average', name: '平均值' }
@@ -539,11 +542,11 @@
                         }
                     ]
                 };
-                return optionlinker;
+                return optiondesigner;
             }
             //所有部门总工作量 图表 加载项
-            function awOption(data) {
-                optionAlllinker = {
+            function adOption(data) {
+                optionAlldesigner = {
                     /*title: {
                         text: '各年份业务数及总金额'
                     },*/
@@ -576,7 +579,7 @@
                         {
                             name: '业务数',
                             type: 'line',
-                            data: data.sumquantites,
+                            data: data.sumquantities,
                             markLine: {
                                 data: [
                                     { type: 'average', name: '平均值' }
@@ -586,7 +589,7 @@
                         {
                             name: '业务金额',
                             type: 'line',
-                            data: data.sumprices,
+                            data: data.sumweights,
                             markLine: {
                                 data: [
                                     { type: 'average', name: '平均值' }
@@ -596,7 +599,7 @@
 
                     ]
                 };
-                return optionAlllinker;
+                return optionAlldesigner;
             }
             //加载 全年数据
             function loadAllYearEcahrt(data, datalegend, selected) {
@@ -708,4 +711,5 @@
         })
     </script>
 </body>
+
 </html>

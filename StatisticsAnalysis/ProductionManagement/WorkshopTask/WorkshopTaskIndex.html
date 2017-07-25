@@ -2,19 +2,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>营销管理完成额统计</title>
+    <title>生产管理车间任务统计</title>
     <link href="../../Public/CSS/Statistics.css" rel="stylesheet" />
 </head>
+
 <body>
     <div class="container">
         <!-- 标题部分 -->
-        <h1 class="header">营销管理完成额统计</h1>
+        <h1 class="header">生产管理车间任务统计</h1>
         <!-- 返回按钮 -->
         <div class="goback" id="goback">返回</div>
         <!-- 生产部门 统计 -->
-        <div class="linker wrap clear">
+        <div class="workshop wrap clear">
             <div class="sub-title">
-                <h2>业务员工作量统计</h2>
+                <h2>各部门工作量统计</h2>
             </div>
             <div class="chart-left" id="ws-chart"></div>
             <div class="table-right" id="ws-table">
@@ -29,7 +30,7 @@
                 </div>
                 <div class="table-content" id="ws-table-content">
                     <div class="content-title">
-                        <strong>业务员</strong>
+                        <strong>生产部门</strong>
                         <strong>业务数</strong>
                         <strong>总金额</strong>
                     </div>
@@ -38,9 +39,9 @@
             </div>
         </div>
         <!-- 总业务数 总金额统计 -->
-        <div class="all-linker wrap clear">
+        <div class="all-workshop wrap clear">
             <div class="sub-title">
-                <h2>总业务工作量统计</h2>
+                <h2>部门总工作量统计</h2>
             </div>
             <div class="chart-left" id="aw-chart"></div>
             <div class="table-right" id="aw-table">
@@ -84,22 +85,22 @@
     </div>
     <script src="../../Public/JS/jquery-1.11.1.min.js"></script>
     <script src="../../Public/JS/echarts.common.min.js"></script>
-    <script>
+   <script>
         $(function () {
             var wsCharts = echarts.init(document.getElementById('ws-chart'));
             var awCharts = echarts.init(document.getElementById('aw-chart'));
             var ymCharts = echarts.init(document.getElementById('ym-chart'));
             var dataWs = {
                 isInit: 'true',
-                linker: [],
-                sumquantites: [],
-                sumprices: []
+                workshop: [],
+                worknum: [],
+                sumprice: []
             }
             var dataAw = {
                 isInit: 'true',
-                year: [],
-                sumquantites: [],
-                sumprices: []
+                yearlist: [],
+                worknum: [],
+                sumprice: []
             }
             var dataYearMonth = [
             /*    {
@@ -126,9 +127,9 @@
                 awCharts.showLoading();
                 ymCharts.showLoading();
 
-                getData('SYear', '#ws-table-content', '#ws-chart');
-                getData('AYear', '#aw-table-content', '#aw-chart');
-                getData('YM', '#ym-table-content', '#ym-chart');
+                getData('WsYear', '#ws-table-content', '#ws-chart');
+                getData('AWYear', '#aw-table-content', '#aw-chart');
+                getData('YearMonth', '#ym-table-content', '#ym-chart');
 
                 //初始化选项索引
                 var WsLastIndex = $('#ws-title').find('li').eq(-1);
@@ -143,49 +144,49 @@
                     //置空dataWs对象
                     dataWs = {
                         isInit: 'true',
-                        linker: [],
-                        sumquantites: [],
-                        sumprices: []
+                        workshop: [],
+                        worknum: [],
+                        sumprice: []
                     }
                     //置空dataAw对象
                     dataAw = {
                         isInit: 'true',
-                        year: [],
-                        sumquantites: [],
-                        sumprices: []
+                        yearlist: [],
+                        worknum: [],
+                        sumprice: []
                     }
                     switch ($(this).attr('id')) {
                         //各部门统计部分
                         case 'ws-week':
-                            getData('SWeek', '#ws-table-content', '#ws-chart');
+                            getData('WsWeek', '#ws-table-content', '#ws-chart');
                             break;
                         case 'ws-month':
-                            getData('SMonth', '#ws-table-content', '#ws-chart');
+                            getData('WsMonth', '#ws-table-content', '#ws-chart');
                             break;
                         case 'ws-quarter':
-                            getData('SQuarter', '#ws-table-content', '#ws-chart');
+                            getData('WsQuarter', '#ws-table-content', '#ws-chart');
                             break;
                         case 'ws-half':
-                            getData('SHalf', '#ws-table-content', '#ws-chart');
+                            getData('WsHalf', '#ws-table-content', '#ws-chart');
                             break;
                         case 'ws-year':
-                            getData('SYear', '#ws-table-content', '#ws-chart');
+                            getData('WsYear', '#ws-table-content', '#ws-chart');
                             break;
                             //部门总统计部分
                         case 'aw-week':
-                            getData('AWeek', '#aw-table-content', '#aw-chart');
+                            getData('AWWeek', '#aw-table-content', '#aw-chart');
                             break;
                         case 'aw-month':
-                            getData('AMonth', '#aw-table-content', '#aw-chart');
+                            getData('AWMonth', '#aw-table-content', '#aw-chart');
                             break;
                         case 'aw-quarter':
-                            getData('AQuarter', '#aw-table-content', '#aw-chart');
+                            getData('AWQuarter', '#aw-table-content', '#aw-chart');
                             break;
                         case 'aw-half':
-                            getData('AHalf', '#aw-table-content', '#aw-chart');
+                            getData('AWHalf', '#aw-table-content', '#aw-chart');
                             break;
                         case 'aw-year':
-                            getData('AYear', '#aw-table-content', '#aw-chart');
+                            getData('AWYear', '#aw-table-content', '#aw-chart');
                             break;
                     }
                 });
@@ -204,7 +205,7 @@
             //获取数据
             function getData(option, listId, chartId) {
                 $.ajax({
-                    url: '/Handler/ERP/SmartFactory/StatisticsAnalysis/MMContractAmountHandler.ashx',
+                    url: '/Handler/ERP/ProductionManagement/SubPlanGoodsStatisticsHandler.ashx',
                     data: { option: option },
                     success: function (data) {
                         data = $.parseJSON(data);
@@ -223,19 +224,19 @@
                 switch (listId) {
                     case '#ws-table-content':
                         for (var i = 0; i < data.total; i++) {
-                            var li = '<li><span>' + data.data[i].linker + '</span><span>' + (data.data[i].sumquantities) + '</span><span>' + data.data[i].sumprices + '</span></li>'
+                            var li = '<li><span>' + data.data[i].workshop + '</span><span>' + (data.data[i].worknum).toFixed(4) + '</span><span>' + data.data[i].sumprice + '</span></li>'
                             arrList[i] = li;
                         }
                         break;
                     case '#aw-table-content':
                         for (var i = 0; i < data.total; i++) {
-                            var li = '<li><span>' + data.data[i].year + '</span><span>' + (data.data[i].sumquantities) + '</span><span>' + data.data[i].sumprices + '</span></li>'
+                            var li = '<li><span>' + data.data[i].yearlist + '</span><span>' + (data.data[i].worknum).toFixed(4) + '</span><span>' + data.data[i].sumprice + '</span></li>'
                             arrList[data.total - i] = li;
                         }
                         break;
                     case '#ym-table-content':
                         for (var i = 0; i < data.total; i++) {
-                            var li = '<li><span>' + data.data[i].yearmonth + '</span><span>' + (data.data[i].sumquantities) + '</span><span>' + data.data[i].sumprices + '</span></li>'
+                            var li = '<li><span>' + data.data[i].yearmonth + '</span><span>' + (data.data[i].worknum).toFixed(4) + '</span><span>' + data.data[i].sumprice + '</span></li>'
                             arrList[data.total - i] = li;
                         }
                         break;
@@ -248,18 +249,18 @@
                 switch (chartId) {
                     case '#ws-chart':
                         for (var i = 0 ; i < data.total; i++) {
-                            dataWs.linker.push(data.data[i].linker);
-                            dataWs.sumquantites.push(data.data[i].sumquantites);
-                            dataWs.sumprices.push(data.data[i].sumprices);
+                            dataWs.workshop.push(data.data[i].workshop);
+                            dataWs.worknum.push(data.data[i].worknum);
+                            dataWs.sumprice.push(data.data[i].sumprice);
                         }
                         wsCharts.hideLoading();
                         wsCharts.setOption(wsOption(dataWs));
                         break;
                     case '#aw-chart':
                         for (var i = 0 ; i < data.total; i++) {
-                            dataAw.year.push(data.data[i].year);
-                            dataAw.sumquantites.push(data.data[i].sumquantites);
-                            dataAw.sumprices.push(data.data[i].sumprices);
+                            dataAw.yearlist.push(data.data[i].yearlist);
+                            dataAw.worknum.push(data.data[i].worknum);
+                            dataAw.sumprice.push(data.data[i].sumprice);
                         }
                         awCharts.hideLoading();
                         awCharts.setOption(awOption(dataAw));
@@ -274,7 +275,7 @@
                         var addData = []; //需要填充进去的数据
                         var indexArr = []; //存储月份不够的年数 具体索引
                         for (var i = 0; i < data.total; i++) {
-                            subDataYear.push(data.data[i].year);
+                            subDataYear.push(data.data[i].yearlist);
                         }
                         subDataYearUnique = unique(subDataYear); //拿到去重后的年份
                         var subSumYear = countNum(subDataYear); //拿到各年份的数目
@@ -283,7 +284,7 @@
                             subSumYearArr.push(subSumYear[key]);
                         }
                         for (var i = 0; i < data.total ; i++) {
-                            var index = subDataYearUnique.indexOf(data.data[i].year);
+                            var index = subDataYearUnique.indexOf(data.data[i].yearlist);
                             //获取非最后一年的其他所有年数的数据
                             if ((index != -1) && (index != subDataYearUnique.length)) {
                                 //操作包括最新一年的所有年份
@@ -299,8 +300,8 @@
                             //这里开始对月份进行统计
                             subMonthArr.splice(0, subMonthArr.length);
                             for (var i = 0; i < data.total ; i++) {
-                                if (data.data[i].year == subDataYearUnique[indexArr[j]]) {
-                                    subMonthArr.push(data.data[i].month);
+                                if (data.data[i].yearlist == subDataYearUnique[indexArr[j]]) {
+                                    subMonthArr.push(data.data[i].monthlist);
                                 }
                             }
                             //这里存储二维数组
@@ -344,10 +345,10 @@
                                 //这里需要用到的字段其实只有 '年','月','业务金额'
                                 addData.push(
                                 {
-                                    sumquantites: 0,
-                                    sumprices: 0,
-                                    year: subDataYearUnique[indexArr[i]],
-                                    month: lackMonthArr[i][j],
+                                    worknum: 0,
+                                    sumprice: 0,
+                                    yearlist: subDataYearUnique[indexArr[i]],
+                                    monthlist: lackMonthArr[i][j],
                                     yearmonth: subDataYearUnique[indexArr[i]] + '-' + lackMonthArr[i][j]
                                 })
                             }
@@ -364,7 +365,7 @@
                             seriesData[i] = new Array();
                             var index = 0;
                             for (var j = 0 ; j < lastDataArr.length ; j++) {
-                                if (lastDataArr[j].year == subDataYearUnique[i]) {
+                                if (lastDataArr[j].yearlist == subDataYearUnique[i]) {
                                     //subDataYearUnique中的年份是排序好的，按年分类不能完全保证月份的顺序
                                     seriesData[i][index] = lastDataArr[j];
                                     index++;
@@ -373,14 +374,14 @@
                         }
                         //按年分类后开始按月份排序
                         for (var i = 0 ; i < subDataYearUnique.length ; i++) {
-                            seriesData[i].sort(by('month'));
+                            seriesData[i].sort(by('monthlist'));
                         }
                         //只需要里面的业务金额，我们还需要一个二维数组 priceArr
                         var priceArr = [];
                         for (var i = 0 ; i < subDataYearUnique.length ; i++) {
                             priceArr[i] = new Array();
                             for (var j = 0 ; j < seriesData[i].length ; j++) {
-                                priceArr[i][j] = seriesData[i][j].sumprices;
+                                priceArr[i][j] = seriesData[i][j].sumprice;
                             }
                         }
                         console.log(seriesData);
@@ -443,7 +444,7 @@
                     xAxis: [
                         {
                             type: 'category',
-                            data: data.datalinker
+                            data: data.dataWorkShop
                         }
                     ],
                     yAxis: [
@@ -482,7 +483,7 @@
 
             //各工作部门工作量 图表 加载项
             function wsOption(data) {
-                optionlinker = {
+                optionWorkShop = {
                     /*title: {
                         text: '部门业务数和总金额',
                     },*/
@@ -508,7 +509,7 @@
                     xAxis: [
                         {
                             type: 'category',
-                            data: data.linker
+                            data: data.workshop
                         }
                     ],
                     yAxis: [
@@ -520,7 +521,7 @@
                         {
                             name: '业务数',
                             type: 'bar',
-                            data: data.sumquantites,
+                            data: data.worknum,
                             markLine: {
                                 data: [
                                     { type: 'average', name: '平均值' }
@@ -530,7 +531,7 @@
                         {
                             name: '总金额',
                             type: 'bar',
-                            data: data.sumprices,
+                            data: data.sumprice,
                             markLine: {
                                 data: [
                                     { type: 'average', name: '平均值' }
@@ -539,11 +540,11 @@
                         }
                     ]
                 };
-                return optionlinker;
+                return optionWorkShop;
             }
             //所有部门总工作量 图表 加载项
             function awOption(data) {
-                optionAlllinker = {
+                optionAllWorkShop = {
                     /*title: {
                         text: '各年份业务数及总金额'
                     },*/
@@ -567,7 +568,7 @@
                     xAxis: {
                         type: 'category',
                         boundaryGap: false,
-                        data: data.year
+                        data: data.yearlist
                     },
                     yAxis: {
                         type: 'value'
@@ -576,7 +577,7 @@
                         {
                             name: '业务数',
                             type: 'line',
-                            data: data.sumquantites,
+                            data: data.worknum,
                             markLine: {
                                 data: [
                                     { type: 'average', name: '平均值' }
@@ -586,7 +587,7 @@
                         {
                             name: '业务金额',
                             type: 'line',
-                            data: data.sumprices,
+                            data: data.sumprice,
                             markLine: {
                                 data: [
                                     { type: 'average', name: '平均值' }
@@ -596,7 +597,7 @@
 
                     ]
                 };
-                return optionAlllinker;
+                return optionAllWorkShop;
             }
             //加载 全年数据
             function loadAllYearEcahrt(data, datalegend, selected) {

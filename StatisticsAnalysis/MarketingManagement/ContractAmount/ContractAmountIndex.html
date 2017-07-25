@@ -1,10 +1,96 @@
 ﻿<!DOCTYPE html>
+<!--
+    
+    营销主计划 完成额统计部分
+
+-->
+
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title></title>
+    <title>营销主计划合同额统计</title>
+    
+    <link href="../../Public/CSS/Statistics.css" rel="stylesheet" />
 </head>
 <body>
+    <div class="container">
+        <!-- 标题部分 -->
+        <h1 class="header">营销管理合同额统计</h1>
+        <!-- 返回按钮 -->
+        <div class="goback" id="goback">返回</div>
+        <!-- 业务员个人统计 -->
+        <div class="mainplan wrap clear">
+            <div class="sub-title">
+                <h2>业务员工作量统计</h2>
+            </div>
+            <div class="chart-left" id="mp-chart"></div>
+            <div class="table-right" id="mp-table">
+                <div class="title clear" id="mp-title">
+                    <ul>
+                        <li id="mp-day">本周</li>
+                        <li id="mp-month">本月</li>
+                        <li id="mp-quarter">本季</li>
+                        <li id="mp-half">半年</li>
+                        <li id="mp-year" class="click">本年</li>
+                    </ul>
+                </div>
+                <div class="table-content" id="mp-table-content">
+                    <div class="content-title">
+                        <strong>业务员</strong>
+                        <strong>业务数</strong>
+                        <strong>业务金额</strong>
+                    </div>
+                    <ul></ul>
+                </div>
+            </div>
+        </div>
+        <!-- 部门统计 -->
+        <div class="dep-statistics wrap clear">
+            <div class="sub-title">
+                <h2>总业务工作量统计</h2>
+            </div>
+            <div class="chart-left" id="ds-chart"></div>
+            <div class="table-right" id="ds-table">
+                <div class="title clear" id="ds-title">
+                    <ul>
+                        <li id="ds-day">本周</li>
+                        <li id="ds-month">本月</li>
+                        <li id="ds-quarter">本季</li>
+                        <li id="ds-half">半年</li>
+                        <li id="ds-year" class="click">全年</li>
+                    </ul>
+                </div>
+                <div class="table-content" id="ds-table-content">
+                    <div class="content-title">
+                        <strong>年份</strong>
+                        <strong>业务数</strong>
+                        <strong>业务金额</strong>
+                    </div>
+                    <ul></ul>
+                </div>
+            </div>
+        </div>
 
+        <!-- 全年统计 -->
+        <div class="wrap clear">
+            <div class="sub-title">
+                <h2>历年各月工作量统计</h2>
+            </div>
+            <div class="chart-left" id="all-chart"></div>
+            <div class="table-right" id="all-table">
+                <div class="table-content" id="all-table-content">
+                    <div class="content-title">
+                        <strong>年-月</strong>
+                        <strong>业务数</strong>
+                        <strong>业务金额</strong>
+                    </div>
+                    <ul></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../Public/JS/jquery-1.11.1.min.js"></script>
+    <script src="../../Public/JS/echarts.common.min.js"></script>
+    <script src="JS/ContractAmount.js"></script>
 </body>
 </html>
